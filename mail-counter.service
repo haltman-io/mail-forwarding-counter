@@ -1,0 +1,28 @@
+[Unit]
+Description=Postfix Mail Forwarding Counter/Monitor
+Documentation=file:///opt/mail-counter/INSTALL.md
+After=network-online.target systemd-journald.service
+Wants=network-online.target
+Requires=systemd-journald.service
+
+[Service]
+Type=simple
+ExecStart=/opt/mail-counter/mail-counter.sh
+EnvironmentFile=/etc/mail-counter.conf
+Restart=always
+RestartSec=5
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/mail-counter
+PrivateTmp=yes
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=mail-counter
+
+[Install]
+WantedBy=multi-user.target
